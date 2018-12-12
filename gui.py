@@ -1,7 +1,8 @@
 import Tkinter as tk
 import tkFileDialog
 
-def create_window_from_list(object_list):
+
+def create_window_from_list(object_list, window_header='Select one'):
 
     window = tk.Tk()
 
@@ -27,14 +28,14 @@ def create_window_from_list(object_list):
     return(object_string)
 
 
-def get_output_dir():
+def get_output_dir(window_header="Select Folder"):
 
     def close_window():
 
         window.destroy()
 
     window = tk.Tk()
-    window.dirpath = tkFileDialog.askdirectory(initialdir = "~", title = "Select Folder")
+    window.dirpath = tkFileDialog.askdirectory(initialdir = "~", title = window_header)
     output_dir = window.dirpath
 
     closing_button = tk.Button(master=window, text='Selection Complete', command=close_window)
@@ -44,3 +45,4 @@ def get_output_dir():
     #output_dir = output_dir.replace(':','-')
 
     return output_dir
+
