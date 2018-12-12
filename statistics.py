@@ -8,12 +8,12 @@ def get_imaris_statistics(object_type, name):
     object_cells = object_type[name]
     object_cell_stats = object_cells.GetStatistics()
 
-    ## Get individual cell IDs and track IDs to create set of edges which form a track
+    # Get individual cell IDs and track IDs to create set of edges which form a track
 
     cells = object_cells.GetIds()
     tracks = object_cells.GetTrackIds()
     edges_indices = object_cells.GetTrackEdges()
-    edges = [ [str(cells[start]),str(cells[stop])] for [start,stop] in edges_indices]
+    edges = [[str(cells[start]),str(cells[stop])] for [start,stop] in edges_indices]
 
     track_cell_mapping = {}
     for trackID,(start,stop) in zip(tracks,edges_indices):
