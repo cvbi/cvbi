@@ -2,11 +2,13 @@ import Tkinter as tk
 import tkFileDialog
 
 
-def create_window_from_list(object_list, window_header='Select one'):
+def create_window_from_list(object_list, window_title='Select one'):
 
     window = tk.Tk()
+    window.title(window_title)
 
     def close_window():
+        """Close window"""
         window.destroy()
 
     object_select = tk.StringVar()
