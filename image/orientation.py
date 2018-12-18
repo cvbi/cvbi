@@ -5,6 +5,16 @@ from scipy.fftpack import fft2, fftshift
 from skimage.transform import resize
 
 def get_image_angles(im, window_size = 13, window_overlap = 0.05, order_param_width = 2):
+    """
+
+    :param im: = image of size (x,y)
+    :param window_size: Window to calculate orientation for
+    :param window_overlap: Overlap fraction between adjacent windows
+    :param order_param_width:
+    :return:
+    angle_out = angle magnitude array, same size as input
+    X,Y,U,V = To use quiver in matplotlib, if needed
+    """
 
 
     # variables for analysis
