@@ -143,7 +143,7 @@ def get_output_dir(window_title="Select Folder", initial_dir="~" , w=400, h=200)
 
     return(output_dir)\
 
-def get_input_file(window_title="Select File", w=400, h=200):
+def get_input_file(window_title="Select File", initial_dir="~", w=400, h=200):
     """
     Get output directory for your file.
 
@@ -160,7 +160,7 @@ def get_input_file(window_title="Select File", w=400, h=200):
     window.title(window_title)
     window.geometry(str(w)+"x"+str(h))
 
-    window.filename = tkFileDialog.askopenfilename(initialdir="~", title=window_title)
+    window.filename = tkFileDialog.askopenfilename(initialdir=initial_dir, title=window_title)
     output_file = window.filename
 
     closing_button = tk.Button(master=window, text='File Selection Complete', command=window.destroy)
