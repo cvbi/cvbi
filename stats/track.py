@@ -4,7 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 
-def get_motility(data_cell, time_limit=600):
+def get_motility(data_cell, time_limit=660):
     """
 
     :param data_cell: pandas dataframe,  Imaris statistics dataset obtained using base_imaris.stats.get_imaris_statistics
@@ -18,6 +18,7 @@ def get_motility(data_cell, time_limit=600):
     data_use = data_use.loc[data_use.loc[:, 'Time Since Track Start'].lt(time_limit).values, :].copy()
     data_use['t_since_start'] = data_use.loc[:, 'Time Since Track Start'].lt(time_limit).values.cumsum()
 
+    data_use = data_use.loc[data_use.t_since_start.lt(11), :]
     data_use_long = data_use.loc[:, ['trackID', 't_since_start', 'Displacement^2']].copy()
     data_use_wide = data_use_long.pivot_table(values='Displacement^2',
                                               index='trackID',
@@ -36,6 +37,7 @@ def get_motility(data_cell, time_limit=600):
     data_use_wide['beta'] = beta
     data_use_wide['c'] = c
     data_use_wide['r2'] = r2
+    data_use_wide['n'] = data_cell.shape[0]
     data_use_wide.reset_index(drop=False, inplace=True)
 
     return(data_use_wide)
