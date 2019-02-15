@@ -53,9 +53,15 @@ def create_window_for_multiple_selection(object_list, window_title='Select Atlea
     window.geometry(str(w)+"x"+str(h))
 
     values = {}
-    for item in object_list:
-        values[item] = tk.IntVar()
-        selection_button = tk.Checkbutton(master=window, text=item, variable=values[item], onvalue=item, offvalue=0)
+    for i in range(len(object_list)):
+        item = object_list[i]
+        values[i] = tk.StringVar()
+        selection_button = tk.Checkbutton(master=window,
+                                          text=item,
+                                          variable=values[i],
+                                          onvalue=item,
+                                          offvalue='0')
+        selection_button.deselect()
         selection_button.pack()
 
     closing_button = tk.Button(master=window, text='Selection Complete', command=window.destroy)
@@ -63,7 +69,10 @@ def create_window_for_multiple_selection(object_list, window_title='Select Atlea
 
     window.mainloop()
 
-    selection_list = [value.get() for key, value in values.iteritems() if value.get() != 0]
+    selection_list = set([value.get()
+                          for key, value in values.iteritems()
+                          if value.get() != '0'])
+
     return(selection_list)
 
 
@@ -141,7 +150,7 @@ def get_output_dir(window_title="Select Folder", initial_dir="~" , w=400, h=200)
     closing_button.pack()
     window.mainloop()
 
-    return(output_dir)\
+    return(output_dir)
 
 def get_input_file(window_title="Select File", initial_dir="~", w=400, h=200):
     """
