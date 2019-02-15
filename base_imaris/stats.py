@@ -55,6 +55,7 @@ def get_imaris_statistics(vImaris, object_type, object_name):
                                              columns='names',
                                              values='values')
     stats_pivot_df = stats_pivot.reset_index()
-    stats_pivot_df['time'] = stats_pivot_df.loc[:, 'Time Index']
+    stats_pivot_df['time'] = stats_pivot_df.loc[:, 'Time Index'].values
+    stats_pivot_df['track_time'] = stats_pivot_df.loc[:, 'Time Since Track Start'].values
 
     return(stats_pivot_df)
