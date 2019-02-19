@@ -2,7 +2,6 @@
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-from time import time
 import numpy as np
 import pandas as pd
 
@@ -47,3 +46,60 @@ def get_motility(data_cell, time_limit=601):
     data_out = pd.DataFrame.from_dict(data_out, orient='index').T
     data_out = data_out.sort_index(axis=1)
     return(data_out)
+
+
+def get_cell_angle(v1 , v2) :
+    """
+
+    :param v1: first movement vector
+    :param v2: second movement vector
+    :return: angle between movement vector one and two
+    """
+    cosang = np.dot( v1 , v2 )
+    sinang = np.linalg.norm( np.cross( v1 , v2 ) )
+    angle = np.arctan2( sinang , cosang )
+    angle = np.rad2deg( angle )
+
+    return (angle)
+
+
+def get_track_angles(df_in , return_ids = False) :
+    """
+
+    :param df_in: pandas data frame containing position coordinates for a single track
+    :param return_ids: whether individual [track, cell] combination IDs should be returned
+    :return: pandas data frame containing relative vector angles at every time point
+    """
+    df = df_in.sort_values( ['time'] )
+    coords = df.loc[: , ['Position X' , 'Position Y' , 'Position Z']].values
+
+    if coords.shape[0] >= 3 :
+        angles = [np.nan]
+        coords_previous = coords[:-2 , ]
+        coords_current = coords[1 :-1 , ]
+        coords_next = coords[2 : , ]
+
+        direction_current = coords_previous - coords_current
+        direction_next = coords_current - coords_next
+
+        for i in range( direction_current.shape[0] ) :
+
+            v1 = direction_current[i]
+            v2 = direction_next[i]
+
+            angle = get_cell_angle( v1 , v2 )
+            angles += [angle]
+
+        angles += [np.nan]
+    else :
+        angles = [np.nan for i in range( coords.shape[0] )]
+
+    output = np.array( angles )
+
+    if return_ids :
+        objectIDs = df.objectID
+        output = pd.DataFrame( { 'angle' : output } , index = objectIDs )
+        return (output)
+
+    else :
+        return (output)
