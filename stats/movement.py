@@ -38,7 +38,7 @@ def get_metrics_cell(data_cell):
     try:
         df['track_length'] = df.loc[:, ['Displacement Delta Length']].values.cumsum()
     except:
-        df['Displacement Delta Length'] = (df.loc[:, ['Position X', 'Position Y', 'Position Z']].diff() ** 2).sum(1).values
+        df['Displacement Delta Length'] = (df.loc[:, ['Position X', 'Position Y', 'Position Z']].diff() ** 2).sum(1).values**0.5
         df['track_length'] = df.loc[:, ['Displacement Delta Length']].values.cumsum()
 
     df['track_displacement'] = df.loc[:, ['Displacement^2']].pow(0.5).values
