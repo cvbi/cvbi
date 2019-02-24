@@ -1,21 +1,16 @@
 import pandas as pd
+import numpy as np
 from objects import GetSurpassObjects
 
 
-def get_imaris_statistics(vImaris, object_type, object_name):
+def get_statistics_cell(vImaris , object_type , object_name):
 
     """
-    Get All statistics from Imaris for a particular object type in current session.
-    Input :
 
-    import ImarisLib
-    from cvbi.base_imaris.connection_helpers import GetObjectId
-
-    vImarisLib = ImarisLib.ImarisLib()
-    aImarisId = GetObjectId()
-    vImaris = vImarisLib.GetApplication(aImarisId)
-
-    df = get_imaris_statistics(vImaris = vImaris, object_type = 'surfaces', object_name = 'Th1')
+    :param vImaris: imaris instance
+    :param object_type: imaris object type
+    :param object_name: imaris object name
+    :return: cell level statistics
 
     """
 
@@ -59,3 +54,28 @@ def get_imaris_statistics(vImaris, object_type, object_name):
     stats_pivot_df['track_time'] = stats_pivot_df.loc[:, 'Time Since Track Start'].values
 
     return(stats_pivot_df)
+
+
+
+def get_statistics_track(vImaris , object_type , object_name):
+
+    """
+
+    :param vImaris: imaris instance
+    :param object_type: imaris object type
+    :param object_name: imaris object name
+    :return: track level statistics
+    """
+
+    objects = GetSurpassObjects(vImaris=vImaris, search=object_type)
+    object_cells = objects[object_name]
+    object_cell_stats = object_cells.GetStatistics()
+
+    data_list = [[objectID,name,unit,value] for objectID,name,unit,value in zip(object_cell_stats.mIds,
+                                                                                object_cell_stats.mNames,
+                                                                                object_cell_stats.mUnits,
+                                                                                object_cell_stats.mValues) if (objectID>100000)]
+    data_df_long = pd.DataFrame(data_list,columns=['trackID','colname','unit','values'])
+    data_df_wide = data_df_long.pivot_table(index='trackID',columns='colname').loc[:,'values'].reset_index(col_level=1)
+
+    return(data_df_wide)
